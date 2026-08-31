@@ -120,17 +120,15 @@
     \begin{tabular}{ cc|c|c|c|c|c| }
         \(A\)         & \(B\)              & \(O\) & \(o\) & \(\Omega\) & \(\omega\) & \(\Theta\) \\
         \hline
-        \(\lg^k n\)   & \(n^\epsilon\)     &       &       &            &            & \\
+        \(\lg^k n\)   & \(n^\epsilon\)     & yes   & yes   & no         & no         & no  \\
         \hline
-        \(n^k\)       & \(c^n\)            &       &       &            &            & \\
+        \(n^k\)       & \(c^n\)            & yes   & yes   & no         & no         & no  \\
         \hline
-        \(\sqrt{n}\)  & \(n^{\sin n}\)     &       &       &            &            & \\
+        \(\sqrt{n}\)  & \(n^{\sin n}\)     & no    & no    & no         & no         & no  \\
         \hline
-        \(2^n\)       & \(2^\frac{n}{2}\)  &       &       &            &            & \\
+        \(2^n\)       & \(2^\frac{n}{2}\)  & no    & no    & yes        & yes        & no  \\
         \hline
-        \(n^{\lg c}\) & \(c^{\lg n}\)      &       &       &            &            & \\
-        \hline
-        \(\lg(n!)\)   & \(\lg(n^n)\)        &       &       &            &            & \\
+        \(n^{\lg c}\) & \(c^{\lg n}\)      & yes   & no    & yes        & no         & yes \\
         \hline
     \end{tabular}
     \end{center}
@@ -151,6 +149,29 @@
 \problem{%
     Prove or disprove \(2^n \in o(n!)\)
 }
+
+\begin{proof}
+    We prove that \(2^n \in o(n!)\) by induction. We must show that there exists \(c, n_0 \in \bb{R}^+\) s.t. \(0 \leq 2^n < c \cdot n!\) for all \(n \geq n_0\). Let \(c = 1\) and \(n_0 = 4\).
+
+\begin{adjustwidth}{.5cm}{.5cm}
+\noindent
+Base case \(n = 4\): Since \(2^4 < 4! \Rightarrow 16 < 24\), \(2^n < n!\) for \(n = 4\).
+\end{adjustwidth}
+
+\begin{adjustwidth}{.5cm}{.5cm}
+\noindent
+Inductive Step: We must show that \(2^k < k! \Rightarrow 2^{k+1} < (k+1)!\). Since \(2^k < k!\), it follows that
+\[
+    2 \cdot 2^k < 2 \cdot k!
+\]
+Since our base case is \(n = 4\), we know that \(2 < k + 1\) for all \(k > 4\). So,
+\begin{align*}
+    2 \cdot 2^k &< (k+1) \cdot k! \\
+    2^{k+1}     &< (k+1)! \\
+\end{align*}
+\end{adjustwidth}
+Thus, \(\exists c, n_0 \in \bb{R}^+\) s.t. \(0 \leq 2^n < c \cdot n!\) for all \(n \geq n_0\), namely \(c = 1\) and \(n_0 = 4\). Therefore, \(2^n \in o(n!)\).
+\end{proof}
 % --------- Problem 3 --------- %
 
 \pagebreak
@@ -166,6 +187,27 @@
     \]
 is \(T(n) = n \lg n\)
 }
+
+\begin{proof}
+Base case \(n = 2\): Since \(T(2) = 2 = 2 \lg 2\), it holds that \(T(n) = n \lg n\) for \(n = 2\).
+
+\noindent
+Inductive Step: We must show that \(T(k) = k \lg k \Rightarrow T(2k) = (2k) (\lg 2k)\), assuming that \(k\) is an exact power of 2.
+
+By definition,
+\[
+    T(2k) = 2 T(k) + 2k
+\]
+Since we assume that \(T(n) = n \lg n\),
+\begin{align*}
+    T(2k) &= 2 (k \lg k) + 2k \\
+          &= 2k \lg k + 2k \\
+          &= 2k (\lg k + 1) \\
+          &= 2k (\lg k + \lg 2) \\
+          &= 2k \lg 2k
+\end{align*}
+Thus, \(T(n) = n \lg n\) for \(n \geq 2\).
+\end{proof}
 % --------- Problem 4 --------- %
 
 \pagebreak
