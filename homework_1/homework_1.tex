@@ -1,0 +1,189 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{cleveref}
+\usepackage{minted}
+\usepackage{titlesec}
+\usepackage{changepage}
+\usepackage[letterpaper,bottom=1in,left=1in,right=1in]{geometry}
+\usepackage[textsize=scriptsize]{todonotes}
+
+% \titleformat*{\section}{\normalsize\bfseries}
+% \titleformat*{\subsection}{\small\bfseries}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+
+\renewcommand{\theequation}{\theproblem.\arabic{equation}}
+
+% ------------------------------- PROBLEM COMMANDS ------------------------------- %
+\newcounter{problem}
+\setcounter{problem}{0}
+
+\newcounter{subproblem}[problem]
+\setcounter{subproblem}{0}
+\renewcommand{\thesubproblem}{\theproblem\alph{subproblem}}
+
+\newcommand{\problem}[1]{
+    \refstepcounter{problem}
+    \noindent\textbf{Prob \theproblem}. #1
+}
+
+\newcommand{\subproblem}[1]{
+    \refstepcounter{subproblem}
+    \vspace{1em}
+    \noindent\hspace{2em}\theproblem\alph{subproblem}. #1
+}
+% ------------------------------- PROBLEM COMMANDS ------------------------------- %
+
+% ------------------------------- NEW THEOREMS ------------------------------------ %
+\newtheorem{lemma}{Lemma}[problem]
+
+\newtheoremstyle{claim}% name
+  {\topsep}% space above
+  {\topsep}% space below
+  {}% body font
+  {}% indent amount
+  {\itshape}% theorem head font
+  {}% punctuation after theorem head
+  {.5em}% space after theorem head
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}% theorem head spec
+\theoremstyle{claim}
+\newtheorem*{claim}{Claim.}
+
+% ------------------------------- NEW THEOREMS ----------------------------------- %
+
+
+% ------------------------------- SOLUTION COMMAND ------------------------------- %
+\newcommand{\answer}[1]{
+    \noindent Ans. #1
+}
+% ------------------------------- SOLUTION COMMAND ------------------------------- %
+
+
+% ------------------------------- FANCY TITLE PAGE ------------------------------- %
+\makeatletter
+\newcommand{\@email}{jdoe@uni.edu}
+\newcommand{\email}[1]{
+    \renewcommand{\@email}{#1}
+}
+
+\newcommand{\@class}{CSCE 52003}
+\newcommand{\class}[1]{
+    \renewcommand{\@class}{#1}
+}
+
+\newcommand{\@classsection}{001}
+\newcommand{\classsection}[1]{
+    \renewcommand{\@classsection}{#1}
+}
+
+\newcommand{\@professor}{John Doe}
+\newcommand{\professor}[1]{
+    \renewcommand{\@professor}{#1}
+}
+
+\makeatletter
+\newcommand{\@duedate}{\today}
+\newcommand{\duedate}[1]{
+    \renewcommand{\@duedate}{#1}
+}
+
+\renewcommand{\maketitle}{
+    \begin{center}
+        \normalsize{\@author \hfill \@duedate} \\
+        \normalsize{\texttt{\@email} \hfill \@class\,-\,\@classsection\ --\ \@professor} \\
+        \vspace{-0.75em}
+        \rule{\textwidth}{0.05em} \\
+        \vspace{0.75em}
+        \Large\textbf{\@title} \\
+        \vspace{1.5em}
+    \end{center}
+}
+\makeatother
+% ------------------------------- FANCY TITLE PAGE ------------------------------- %
+
+\author{Brent Orlina}
+\email{borlina@uark.edu} 
+\class{CSCE 41303}
+\classsection{001}
+\professor{Trent Rogers}
+\duedate{September 1, 2026}
+\title{Problem Set 1}
+
+\begin{document}
+\maketitle
+
+% --------- Problem 1 --------- %
+\problem{%
+    Indicate for each pair of expressions \((A, B)\) in the table below where \(A\) is \(O\), \(o\), \(\Omega\), \(\omega\), or \(\Theta\) of \(B\) (e.g. is \(\lg^k(n) \in O(n^\epsilon)?\). Assume that \(k \geq 1, \epsilon > 0\), and \(c > 1\) are constants. Write you answer in the form of the table with ``yes'' or ``no'' written in each box.
+
+    \begin{center}
+    \begin{tabular}{ cc|c|c|c|c|c| }
+        \(A\)         & \(B\)              & \(O\) & \(o\) & \(\Omega\) & \(\omega\) & \(\Theta\) \\
+        \hline
+        \(\lg^k n\)   & \(n^\epsilon\)     &       &       &            &            & \\
+        \hline
+        \(n^k\)       & \(c^n\)            &       &       &            &            & \\
+        \hline
+        \(\sqrt{n}\)  & \(n^{\sin n}\)     &       &       &            &            & \\
+        \hline
+        \(2^n\)       & \(2^\frac{n}{2}\)  &       &       &            &            & \\
+        \hline
+        \(n^{\lg c}\) & \(c^{\lg n}\)      &       &       &            &            & \\
+        \hline
+        \(\lg(n!)\)   & \(\lg(n^n)\)        &       &       &            &            & \\
+        \hline
+    \end{tabular}
+    \end{center}
+}
+% --------- Problem 1 --------- %
+
+\pagebreak
+
+% --------- Problem 2 --------- %
+\problem{%
+    Let \(f(n)\) and \(g(n)\) be asymptotically nonnegative functions. Show that \(f(n) \in o(g(n))\) if and only if \(g(n) \in \omega(f(n))\).
+}
+% --------- Problem 2 --------- %
+
+\pagebreak
+
+% --------- Problem 3 --------- %
+\problem{%
+    Prove or disprove \(2^n \in o(n!)\)
+}
+% --------- Problem 3 --------- %
+
+\pagebreak
+
+% --------- Problem 4 --------- %
+\problem{%
+    Use mathematical induction to show that when \(n \geq 2\) is an exact power of 2, the solution of the recurrence
+    \[
+        T(n) = \begin{cases}
+            2                   &\text{if } n = 2 \\
+            2T(\frac{n}{2}) + n &\text{if } n > 2
+        \end{cases}
+    \]
+is \(T(n) = n \lg n\)
+}
+% --------- Problem 4 --------- %
+
+\pagebreak
+
+% --------- Problem 5 --------- %
+\problem{%
+    Prove the following algorithm correctly calculates the sum of an array \texttt{arr}.
+}
+\begin{minted}[linenos]{python}
+def sum_array(arr, n):
+    if n == 1:
+        return arr[0]
+    mid = n // 2
+    left = sum_array(arr[:mid], mid)
+    right = sum_array(arr[mid:], n - mid)
+    return left + right
+\end{minted}
+% --------- Problem 5 --------- %
+
+\end{document}
+
