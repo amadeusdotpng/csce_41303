@@ -151,7 +151,7 @@
 }
 
 \begin{proof}
-    We prove that \(2^n \in o(n!)\) by induction. We must show that there exists \(c, n_0 \in \bb{R}^+\) s.t. \(0 \leq 2^n < c \cdot n!\) for all \(n \geq n_0\). Let \(c = 1\) and \(n_0 = 4\).
+We prove that \(2^n \in o(n!)\) by induction. We must show that there exists \(c, n_0 \in \bb{R}^+\) s.t. \(0 \leq 2^n < c \cdot n!\) for all \(n \geq n_0\). Let \(c = 1\) and \(n_0 = 4\).
 
 \begin{adjustwidth}{.5cm}{.5cm}
 \noindent
@@ -167,7 +167,7 @@ Inductive Step: We must show that \(2^k < k! \Rightarrow 2^{k+1} < (k+1)!\). Sin
 Since our base case is \(n = 4\), we know that \(2 < k + 1\) for all \(k > 4\). So,
 \begin{align*}
     2 \cdot 2^k &< (k+1) \cdot k! \\
-    2^{k+1}     &< (k+1)! \\
+    2^{k+1}     &< (k+1)!
 \end{align*}
 \end{adjustwidth}
 Thus, \(\exists c, n_0 \in \bb{R}^+\) s.t. \(0 \leq 2^n < c \cdot n!\) for all \(n \geq n_0\), namely \(c = 1\) and \(n_0 = 4\). Therefore, \(2^n \in o(n!)\).
@@ -189,6 +189,8 @@ is \(T(n) = n \lg n\)
 }
 
 \begin{proof}
+We prove this by induction.
+
 Base case \(n = 2\): Since \(T(2) = 2 = 2 \lg 2\), it holds that \(T(n) = n \lg n\) for \(n = 2\).
 
 \noindent
@@ -225,6 +227,16 @@ def sum_array(arr, n):
     right = sum_array(arr[mid:], n - mid)
     return left + right
 \end{minted}
+
+\begin{proof}
+We prove this by induction.
+
+Base case \(n = 1\): Since \(n = 1\), \texttt{sum\_array} correctly returns just the first element of \texttt{arr}.
+
+Inductive Step:
+
+
+\end{proof}
 % --------- Problem 5 --------- %
 
 \end{document}
