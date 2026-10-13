@@ -1,0 +1,214 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{cleveref}
+\usepackage{minted}
+\usepackage{titlesec}
+\usepackage{changepage}
+\usepackage[letterpaper,bottom=1in,left=1in,right=1in]{geometry}
+\usepackage[textsize=scriptsize]{todonotes}
+
+% \titleformat*{\section}{\normalsize\bfseries}
+% \titleformat*{\subsection}{\small\bfseries}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+
+\renewcommand{\theequation}{\theproblem.\arabic{equation}}
+
+% ------------------------------- PROBLEM COMMANDS ------------------------------- %
+\newcounter{problem}
+\setcounter{problem}{0}
+
+\newcounter{subproblem}[problem]
+\setcounter{subproblem}{0}
+\renewcommand{\thesubproblem}{\theproblem\alph{subproblem}}
+
+\newcommand{\problem}[1]{
+    \refstepcounter{problem}
+    \noindent\textbf{Prob \theproblem}. #1
+}
+
+\newcommand{\subproblem}[1]{
+    \refstepcounter{subproblem}
+    \vspace{1em}
+    \noindent\hspace{2em}\theproblem\alph{subproblem}. #1
+}
+% ------------------------------- PROBLEM COMMANDS ------------------------------- %
+
+% ------------------------------- NEW THEOREMS ------------------------------------ %
+\newtheorem{lemma}{Lemma}[problem]
+
+\newtheoremstyle{claim}% name
+  {\topsep}% space above
+  {\topsep}% space below
+  {}% body font
+  {}% indent amount
+  {\itshape}% theorem head font
+  {}% punctuation after theorem head
+  {.5em}% space after theorem head
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}% theorem head spec
+\theoremstyle{claim}
+\newtheorem*{claim}{Claim.}
+
+% ------------------------------- NEW THEOREMS ----------------------------------- %
+
+
+% ------------------------------- SOLUTION COMMAND ------------------------------- %
+\newcommand{\answer}[1]{
+    \noindent Ans. #1
+}
+% ------------------------------- SOLUTION COMMAND ------------------------------- %
+
+
+% ------------------------------- FANCY TITLE PAGE ------------------------------- %
+\makeatletter
+\newcommand{\@email}{jdoe@uni.edu}
+\newcommand{\email}[1]{
+    \renewcommand{\@email}{#1}
+}
+
+\newcommand{\@class}{CSCE 52003}
+\newcommand{\class}[1]{
+    \renewcommand{\@class}{#1}
+}
+
+\newcommand{\@classsection}{001}
+\newcommand{\classsection}[1]{
+    \renewcommand{\@classsection}{#1}
+}
+
+\makeatletter
+\newcommand{\@duedate}{\today}
+\newcommand{\duedate}[1]{
+    \renewcommand{\@duedate}{#1}
+}
+
+\renewcommand{\maketitle}{
+    \begin{center}
+        \normalsize{\@author \hfill \@duedate} \\
+        \normalsize{\texttt{\@email} \hfill \@class\,-\,\@classsection} \\
+        \vspace{-0.75em}
+        \rule{\textwidth}{0.05em} \\
+        \vspace{0.75em}
+        \Large\textbf{\@title} \\
+        \vspace{1.5em}
+    \end{center}
+}
+\makeatother
+% ------------------------------- FANCY TITLE PAGE ------------------------------- %
+
+\author{Brent Orlina}
+\email{borlina@uark.edu} 
+\class{CSCE 41303}
+\classsection{001}
+\duedate{September 1, 2026}
+\title{Problem Set 1}
+
+\begin{document}
+\maketitle
+
+% --------- Problem 1 --------- %
+\problem{%
+    Use a recursion tree to determine a good asymptotic upper bound on the recurrence \(T(n) = T(n - 1) + \Theta(n)\). Use the substitution method to verify your answer.
+}
+% --------- Problem 1 --------- %
+
+\pagebreak
+
+% --------- Problem 2 --------- %
+\problem{%
+    Use the master method to give tight asymptotic bounds for the following recurrences.
+}
+
+\subproblem{%
+    \(T(n) = 2T(n/4) + 1\)
+}
+
+\subproblem{%
+    \(T(n) = 2T(n/4) + \sqrt{n}\)
+}
+
+\subproblem{%
+    \(T(n) = 2T(n/4) + n\)
+}
+
+\subproblem{%
+    \(T(n) = 2T(n/4) + n^2\)
+}
+% --------- Problem 2 --------- %
+
+\pagebreak
+
+% --------- Problem 3 --------- %
+\problem{%
+    Prove the correctness and the runtime of the following sorting algorithm:
+}
+\begin{listing}[h]
+\centering
+\begin{minted}[linenos]{python}
+def insert_sort(A, i=None):
+    '''Sort A[:i+1]'''
+    if i is None:
+        i = len(A) - 1
+    if i > 0:
+        insertion_sort(A, i - 1)
+        insert_last(A, i)
+
+def insert_last(A, i):
+    '''Sort A[:i+1] assuming sorted A[:i]'''
+    if i > 0 and A[i] < A[i-1]:
+        A[i], A[i-1] = A[i-1], A[i]
+        insert_last(A, i-1)
+\end{minted}
+\caption{Insertion Sort}
+\end{listing}
+% --------- Problem 3 --------- %
+
+\pagebreak
+
+% --------- Problem 4 --------- %
+\problem{%
+    Demonstrate an algorithn with a runtime of \(O(n^2 \lg n\) which solves the following problem: Given an array \texttt{A}, output the three numbers in \texttt{A} that sum to 0 provided that they exist.
+}
+% --------- Problem 4 --------- %
+
+\pagebreak
+
+% --------- Problem 5 --------- %
+\problem{%
+    Demonstrate an algorithm with an expected runtime of \(O(n)\) which solves the following problem: Given an array \texttt{A}, find the longest contiguous subarray with a sum of 0 provided such a subarray exists.
+}
+% --------- Problem 5 --------- %
+
+\pagebreak
+
+% --------- Problem 6 --------- %
+\problem{%
+    Is the array with values \(\langle 32, 18, 21, 15, 13, 11, 3, 13, 17, 12 \rangle\) a max-heap? Why or why not?
+}
+% --------- Problem 6 --------- %
+
+\pagebreak
+
+% --------- Problem 7 --------- %
+\problem{%
+    Is an array that is in reverse-sorted order a max-heap? Give a counter example if it is false, and prove it if it is true.
+}
+% --------- Problem 7 --------- %
+
+\pagebreak
+
+% --------- Problem 8 --------- %
+\problem{%
+    Show that the worst-case running time of \texttt{max\_heapify\_down} on a heap of size \(n\) is \(\omega(\lg n)\).
+}
+% --------- Problem 8 --------- %
+
+\pagebreak
+
+% --------- Problem 9 --------- %
+\problem{%
+    Give an \(O(n \lg k)\)-time algorithm to merge \(k\) sorted lists into one sorted list, where \(n\) is the total number of elements in all the input lists. (\emph{Hint}: Use a min-heap for k-way merging).
+}
+% --------- Problem 9 --------- %
+\end{document}
+
