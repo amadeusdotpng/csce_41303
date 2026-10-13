@@ -24,7 +24,7 @@
 
 \newcommand{\problem}[1]{
     \refstepcounter{problem}
-    \noindent\textbf{Prob \theproblem}. #1
+    \noindent\textbf{Problem \theproblem}. #1
 }
 
 \newcommand{\subproblem}[1]{
@@ -114,7 +114,7 @@
 
 % --------- Problem 1 --------- %
 \problem{%
-    Indicate for each pair of expressions \((A, B)\) in the table below where \(A\) is \(O\), \(o\), \(\Omega\), \(\omega\), or \(\Theta\) of \(B\) (e.g. is \(\lg^k(n) \in O(n^\epsilon)?\). Assume that \(k \geq 1, \epsilon > 0\), and \(c > 1\) are constants. Write you answer in the form of the table with ``yes'' or ``no'' written in each box.
+    Indicate for each pair of expressions \((A, B)\) in the table below where \(A\) is \(O\), \(o\), \(\Omega\), \(\omega\), or \(\Theta\) of \(B\) (e.g. is \(\lg^k(n) \in O(n^\epsilon)?\)). Assume that \(k \geq 1, \epsilon > 0\), and \(c > 1\) are constants. Write you answer in the form of the table with ``yes'' or ``no'' written in each box.
 
     \begin{center}
     \begin{tabular}{ cc|c|c|c|c|c| }
@@ -139,8 +139,52 @@
 
 % --------- Problem 2 --------- %
 \problem{%
-    Let \(f(n)\) and \(g(n)\) be asymptotically nonnegative functions. Show that \(f(n) \in o(g(n))\) if and only if \(g(n) \in \omega(f(n))\).
+Let \(f(n)\) and \(g(n)\) be asymptotically nonnegative functions. Show that \(f(n) \in o(g(n))\) if and only if \(g(n) \in \omega(f(n))\).
 }
+
+\begin{lemma}
+    \label{lem:n-eq-1/n'}
+    \(\forall n \in \bb{R}^+,\: \exists n'\) s.t. \(n = \frac{1}{n'}\).
+\end{lemma}
+\begin{proof}
+Let \(n \in \bb{R}^+\) and \(n' = \frac{1}{n}\). It follows that,
+\[
+    \frac{1}{n'} = \frac{1}{\frac{1}{n}} = n
+\]
+Therefore, \(\forall n \in \bb{R}^+,\: \exists n'\) s.t. \(n = \frac{1}{n'}\).
+\end{proof}
+
+\begin{proof}
+We first prove that \(f(n) \in o(g(n)) \Rightarrow g(n) \in \omega(f(n))\). By definition,
+\[
+    \forall c_0 \in \bb{R}^+,\: \exists n_0 \in \bb{R}^+\ \text{s.t.}\ \forall n \geq n_0,\: 0 \leq f(n) < c_0 \cdot g(n)
+\]
+It directly follows that
+\[
+    \forall c_0 \in \bb{R}^+,\: \exists n_0 \in \bb{R}^+\ \text{s.t.}\ \forall n \geq n_0,\: 0 \leq \frac{1}{c_0} \cdot f(n) < g(n)
+\]
+By \cref{lem:n-eq-1/n'}, any positive real number \(c_1\) can be rewritten as a reciprocal of some positive real number \(c_0\), so it is equivalent to say that
+\[
+    \forall c_1 \in \bb{R}^+,\: \exists n_0 \in \bb{R}^+\ \text{s.t.}\ \forall n \geq n_0,\: 0 \leq c_1 \cdot f(n) < g(n)
+\]
+i.e, \(g(n) \in \omega(f(n))\). Thus, \(f(n) \in o(g(n)) \Rightarrow g(n) \in \omega(f(n))\)
+
+\vspace{.5em}
+
+We prove that \(g(n) \in \omega(f(n)) \Rightarrow f(n) \in o(g(n))\) similarly. By definition,
+\[
+    \forall c_0 \in \bb{R}^+,\: \exists n_0 \in \bb{R}^+\ \text{s.t.}\ \forall n \geq n_0,\: 0 \leq c_0 \cdot f(n) < g(n)
+\]
+It directly follows that
+\[
+    \forall c_0 \in \bb{R}^+,\: \exists n_0 \in \bb{R}^+\ \text{s.t.}\ \forall n \geq n_0,\: 0 \leq f(n) < \frac{1}{c_0} \cdot g(n)
+\]
+Again, by \cref{lem:n-eq-1/n'}, any positive real number \(c_1\) can be rewritten as a reciprocal of some positive real number \(c_0\), so it is equivalent to say that
+\[
+    \forall c_1 \in \bb{R}^+,\: \exists n_0 \in \bb{R}^+\ \text{s.t.}\ \forall n \geq n_0,\: 0 \leq f(n) < c_1 \cdot g(n)
+\]
+i.e, \(f(n) \in o(g(n))\). Thus \(g(n) \in \omega(f(n)) \Rightarrow f(n) \in o(g(n))\). Therefore, \(f(n) \in o(g(n))\) if and only if \(g(n) \in \omega(f(n))\).
+\end{proof}
 % --------- Problem 2 --------- %
 
 \pagebreak
@@ -231,10 +275,15 @@ def sum_array(arr, n):
 \begin{proof}
 We prove this by induction.
 
-Base case \(n = 1\): Since \(n = 1\), \texttt{sum\_array} correctly returns just the first element of \texttt{arr}.
+Base case \(n = 1\): When \(n = 1\), \texttt{sum\_array} correctly returns just the first element of \texttt{arr} since the sum of a 1-element array is just the singular element in the array.
 
-Inductive Step:
+\vspace{.5em}
 
+Inductive Step: We must show that if \texttt{sum\_array(arr, j)} correctly returns the sum of \texttt{arr} that is of some length \texttt{j} where \(1 \leq \texttt{j} \leq \texttt{k}\) up to some point \texttt{k}, then \texttt{sum\_array(arr', k+1)} also correctly returns the sum of some array \texttt{arr'} of some length \texttt{k+1}.
+
+When \texttt{sum\_array(arr', k+1)} is called, \texttt{mid = (k + 1) // 2}. It then partitions \texttt{arr'} into two subarrays, \texttt{arr'[:mid]} and \texttt{arr'[mid:]}, so both subarrays account for all numbers in \texttt{arr'}. Since \(1 \leq \texttt{(k + 1) // 2} \leq \texttt{k}\) and \(1 \leq \texttt{(k + 1) - ((k + 1) // 2)}\), we know that both \texttt{sum\_array} calls on lines 5 and 6 will return the correct sum for \texttt{arr'[:mid]} and \texttt{arr'[mid:]}. Since both subarrays account for all numbers in \texttt{arr'}, then the adding the sums of both subarrays will return the sum of \texttt{arr'}, which is done in line 7.
+
+Therefore, \texttt{sum\_array(arr, n)} correctly returns the sum of \texttt{arr} of some length \texttt{n} where \(1 \leq \texttt{n}\).
 
 \end{proof}
 % --------- Problem 5 --------- %
