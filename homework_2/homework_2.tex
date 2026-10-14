@@ -1,9 +1,11 @@
 \documentclass[11pt]{article}
 \usepackage{amsmath,amsthm,amssymb,mathtools}
-\usepackage{cleveref}
+\usepackage[capitalise]{cleveref}
 \usepackage{minted}
 \usepackage{titlesec}
 \usepackage{changepage}
+\usepackage[edges]{forest}
+\usepackage{graphicx}
 \usepackage[letterpaper,bottom=1in,left=1in,right=1in]{geometry}
 \usepackage[textsize=scriptsize]{todonotes}
 
@@ -24,7 +26,7 @@
 
 \newcommand{\problem}[1]{
     \refstepcounter{problem}
-    \noindent\textbf{Prob \theproblem}. #1
+    \noindent\textbf{Problem \theproblem}. #1
 }
 
 \newcommand{\subproblem}[1]{
@@ -96,6 +98,8 @@
 \makeatother
 % ------------------------------- FANCY TITLE PAGE ------------------------------- %
 
+\setlength{\parskip}{.75\baselineskip}
+
 \author{Brent Orlina}
 \email{borlina@uark.edu} 
 \class{CSCE 41303}
@@ -107,8 +111,57 @@
 \maketitle
 
 % --------- Problem 1 --------- %
-\problem{%
+\problem{\label{prb:problem-1}%
     Use a recursion tree to determine a good asymptotic upper bound on the recurrence \(T(n) = T(n - 1) + \Theta(n)\). Use the substitution method to verify your answer.
+}
+
+\answer{
+\begin{figure}[h]
+\centering
+\begin{forest}
+for tree={s sep=1em,},
+[,phantom
+    [Size: n - 0, for tree={color=darkgray, no edge}
+    [Size: n - 1, tier=b
+    [Size: n - 2, tier=c
+    [\vdots,      tier=d
+    [Size: 1, tier=e]]]]]                   
+%
+    [\(\Theta(n-0)\)
+    [\(\Theta(n-1)\), tier=b
+    [\(\Theta(n-2)\), tier=c 
+    [\vdots,        tier=d
+    [\(\Theta(1)\), tier=e]]]]] 
+]
+\end{forest}
+\end{figure}
+
+\noindent
+Summing the tree, we get
+\[\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = O(n^2)\]
+So, \(T(n) = O(n^2)\).
+
+\noindent
+We verify using the substitution method. Assume that \(T(n) = O(n^2)\). We need to show that there exists \(c, n_0 \in \bb{R}^+\) such that \(T(n) \leq c \cdot n^2\) for all \(n \geq n_0\). We prove this by strong induction. Let \(n_0 = 1\)
+
+\noindent
+Base Case (\(T(1) = \Theta(1)\)). By definition, there exists some \(c'\) and \(n_0'\) such that \(T(1) \leq c' \cdot 1 \leq c' \cdot n^2\) for all \(n \geq n_0'\). Thus, \(T(1)\) is a suitable base case by setting \(c = c'\) and \(n_0 = n_0'\).
+
+\noindent
+Inductive Step. We assume that for some \(c, n_0 \in \bb{R}^+\) and \(k \in \bb{N}\), \(T(k') \leq c \cdot k'^2\) for all \(k'\) where \(n_0 \leq k' < k\). We want to show \(T(k) \leq c \cdot k^2\). So,
+\begin{alignat*}{2}
+    T(k) &= T(k - 1) + \Theta(k)\\
+         &\leq c \cdot (k - 1)^2 + \Theta(k)\\
+         &\leq c \cdot (k - 1)^2 + c \cdot k\qquad\ && (\text{by definition of } \Theta(k))\\
+         &\leq c \cdot (k^2 - 2k + 1) + c \cdot k\\
+         &\leq c \cdot (k^2 - 2k + k) + c \cdot k\\
+         &\leq c \cdot (k^2 - k) + c \cdot k\\
+         &\leq c \cdot k^2 - c \cdot k + c \cdot k\\
+         &\leq c \cdot k^2
+\end{alignat*}
+
+\noindent
+So, \(T(n) = O(n^2)\).
 }
 % --------- Problem 1 --------- %
 
@@ -123,30 +176,64 @@
     \(T(n) = 2T(n/4) + 1\)
 }
 
+\answer{%
+\noindent
+\(a = 2\), \(b = 4\), and \(f(n) = 1\).\\
+So \(\log_b a = log_4 2 = \frac{1}{2} \Rightarrow n^{\log_b a} = n^{\frac{1}{2}}\). Since \(f(n) = 1 \in O(n^{\frac{1}{2} - \varepsilon})\) for some \(\varepsilon > 0\), then
+\[T(n) \in \Theta(n^\frac{1}{2})\]
+by the Master Theorem.
+}
+
 \subproblem{%
     \(T(n) = 2T(n/4) + \sqrt{n}\)
+}
+
+\answer{%
+\noindent
+\(a = 2\), \(b = 4\), and \(f(n) = \sqrt{n} = n^{\frac{1}{2}}\).\\
+So \(\log_b a = log_4 2 = \frac{1}{2} \Rightarrow n^{\log_b a} = n^{\frac{1}{2}}\). Since \(f(n) = n^{\frac{1}{2}} \in \Theta(n^{\frac{1}{2}})\), then
+\[T(n) \in \Theta(n^\frac{1}{2} \lg n)\]
+by the Master Theorem.
 }
 
 \subproblem{%
     \(T(n) = 2T(n/4) + n\)
 }
 
+\answer{%
+\noindent
+\(a = 2\), \(b = 4\), and \(f(n) = n\).\\
+So \(\log_b a = log_4 2 = \frac{1}{2} \Rightarrow n^{\log_b a} = n^{\frac{1}{2}}\). Since \(f(n) = n \in \Omega(n^{\frac{1}{2} + \varepsilon})\) for some \(\varepsilon > 0\) and\\
+\(2 f(\frac{n}{4}) = \frac{1}{2}n \leq c f(n) = cn\) for some \(c < 1\), namely any \(c\) such that \(\frac{1}{2} \leq c < 1\), then
+\[T(n) \in \Theta(f(n) = n)\]
+by the Master Theorem.
+}
+
 \subproblem{%
     \(T(n) = 2T(n/4) + n^2\)
+}
+
+\answer{%
+\noindent
+\(a = 2\), \(b = 4\), and \(f(n) = n^2\).\\
+So \(\log_b a = log_4 2 = \frac{1}{2} \Rightarrow n^{\log_b a} = n^{\frac{1}{2}}\). Since \(f(n) = n^2 \in \Omega(n^{\frac{1}{2} + \varepsilon})\) for some \(\varepsilon > 0\) and\\
+\(2 f(\frac{n}{4}) = \frac{1}{8}n^2 \leq c f(n) = cn^2\) for some \(c < 1\), namely any \(c\) such that \(\frac{1}{8} \leq c < 1\), then
+\[T(n) \in \Theta(f(n) = n^2)\]
+by the Master Theorem.
 }
 % --------- Problem 2 --------- %
 
 \pagebreak
 
 % --------- Problem 3 --------- %
-\problem{%
+\problem{\label{prb:problem-3}%
     Prove the correctness and the runtime of the following sorting algorithm:
 }
 \begin{listing}[h]
 \centering
 \begin{minted}[linenos]{python}
-def insert_sort(A, i=None):
-    '''Sort A[:i+1]'''
+def insertion_sort(A, i=None):
+    '''Sort A[:i]'''
     if i is None:
         i = len(A) - 1
     if i > 0:
@@ -154,21 +241,100 @@ def insert_sort(A, i=None):
         insert_last(A, i)
 
 def insert_last(A, i):
-    '''Sort A[:i+1] assuming sorted A[:i]'''
+    '''Sort A[:i] assuming sorted A[:i-1]'''
     if i > 0 and A[i] < A[i-1]:
         A[i], A[i-1] = A[i-1], A[i]
         insert_last(A, i-1)
 \end{minted}
 \caption{Insertion Sort}
 \end{listing}
+
+\begin{lemma}\label{lem:insert_last-sort}
+    \texttt{insert\_last(A, i)} sorts \texttt{A[:i]} assuming that \texttt{A[:i-1]} is sorted.
+\end{lemma}
+\begin{proof}[Proof of Correctness]{(\cref{lem:insert_last-sort})}
+\noindent
+We prove this lemma by induction.
+
+\noindent
+Base Case (\texttt{len(A) = 1}). An array of length 1 is sorted by default.\\
+Base Case (\texttt{len(A) = 2}). If \texttt{A} is sorted, i.e. \(\texttt{A[1]} \geq \texttt{A[0]}\), then\\ \texttt{insert\_last(A, 1)} does nothing since it fails the second condition of the if-statement on line 11. If \texttt{A} is not sorted, i.e. \(\texttt{A[1]} < \texttt{A[0]}\), then \texttt{insert\_last(A, 1)} would enter the if-statement on line 11 and swap \texttt{A[0]} and \texttt{A[1]} which would sort them. The recursive call into \texttt{insert\_last(A, 0)} would do nothing since \(\texttt{i} = 0 \not> 0\).
+\end{proof}
+
+\noindent
+Inductive Step. We assume that \texttt{insert\_last(A, i-1)} sorts \texttt{A[:i-1]} for some \texttt{i}. We want to show that \texttt{insert\_last(A, i)} sorts \texttt{A[:i]}. If A[:i] is unsorted, then \texttt{A[i-1]} and \texttt{A[i]} must be out of order, i.e. \(\texttt{A[i-1]} \geq \texttt{A[i]}\), since \texttt{A[:i-1]} is assumed to be sorted. So, calling \texttt{insert\_last(A, i)} will swap \texttt{A[i-1]} and \texttt{A[i]}, correctly sorting them. Then, the \texttt{insert\_last(A, i-1)} call will sort, the now potentially unsorted, \texttt{A[:i-1]} by assumption.
+
+\noindent
+Thus, \texttt{insert\_last(A, i)} sorts \texttt{A[:i]} assuming that \texttt{A[:i-1]} is sorted.
+
+\begin{proof}[Proof of Correctness]{(Problem \ref{prb:problem-3})}
+\noindent
+\texttt{insertion\_sort(A, i)} will recurse down to\\\texttt{insertion\_sort(A, 1)} where it will then sort \texttt{A[:1]} by calling \texttt{insert\_last(A, 1)}. We know \texttt{insert\_last(A, 1)} will correctly sort \texttt{A[:1]} by \cref{lem:insert_last-sort}. When the call stack pops back to \texttt{insert\_last(A, 2)}, \texttt{A[:1]} is sorted and therefore \texttt{insert\_last(A, 2)} will sort \texttt{A[:2]} by \cref{lem:insert_last-sort}. This, in general, continues until the call stack returns to \texttt{insertion\_sort(A, i)} where \texttt{insert\_last(A, i)} will correctly sort \texttt{A[i]}
+\end{proof}
+
+\pagebreak
+
+\noindent
+\begin{claim}
+\texttt{insertion\_sort(A, i)} runs in \(O(n^2)\)-time where \(n = \texttt{len(A)}\).
+\end{claim}
+\begin{proof}[Proof of Runtime]{(Problem \ref{prb:problem-3})}
+\noindent
+\texttt{insertion\_sort(A, i)} branches into only one branch of\\ \texttt{insertion\_sort(A, i-1)} and then calls \texttt{insert\_last(A, i)} for each \(i > 0\). The \texttt{insert\_last(A, i)} also calls \texttt{insert\_last(A, i-1)} for each \(i > 0\). Thus, the runtime of \texttt{insertion\_sort(A, i)} can be represented by the recurrence relation
+\[T(n) = T(n - 1) + \Theta(n)\]
+By the proof provided in Problem \ref{prb:problem-1}, \(T(n) = O(n^2)\) and therefore \texttt{insertion\_sort(A, i)} runs in \(O(n^2)\)-time.
+\end{proof}
 % --------- Problem 3 --------- %
 
 \pagebreak
 
 % --------- Problem 4 --------- %
 \problem{%
-    Demonstrate an algorithn with a runtime of \(O(n^2 \lg n\) which solves the following problem: Given an array \texttt{A}, output the three numbers in \texttt{A} that sum to 0 provided that they exist.
+    Demonstrate an algorithm with a runtime of \(O(n^2 \lg n)\) which solves the following problem: Given an array \texttt{A}, output the three numbers in \texttt{A} that sum to 0 provided that they exist.
 }
+
+\answer{}
+\begin{listing}[h]
+\centering
+\begin{minted}[linenos]{python}
+def sum_zero(A):
+    # Red-Black Tree data structure discussed in class
+    bst = RBTree()
+
+    # Runs in O(n lg n) in total
+    for i in range(len(A)):
+        # We store both the element and the index.
+        # We use the element as the key.
+        # Runs in O(lg n)
+        bst.insert((A[i], i)) 
+
+    # Runs in O(n^2 lg n) in total
+    for i in range(len(A)):
+        # Runs in O(n lg n in total
+        for j in range(len(A)):
+            if i == j:
+                continue
+
+            a, b = A[i], A[j]
+            # Runs in O(lg n)
+            c = bst.find(-(a + b))
+            if c is None or c[1] == i or c[1] == j:
+                continue
+
+            return a, b, c[0]
+
+    return None
+\end{minted}
+\end{listing}
+
+\noindent
+\texttt{sum\_zero(A)} works by building a Red-Black tree of \texttt{A}'s elements. Then, we do a doubly-nested for-loop through \texttt{A} to get two distinct elements of \texttt{A}, \texttt{a} and \texttt{b}. Then, we try to find the negative of their sum in the Red-Black tree, which takes \(O(\lg n)\). If it doesn't exist, we continue.
+
+\noindent
+The algorithm returns the correct values since we go through every possible 2-sum of \texttt{A} and try to find another distinct element, \texttt{c}, that is the negative of the 2-sum, which would make \texttt{a}, \texttt{b}, and \texttt{c} sum to zero.
+
+\noindent
+The algorithm runs in \(O(n^2 \lg n)\)-time since we are doing \(O(\lg n)\) work (the \texttt{bst.find(-(a + b))}), in each iteration of a double for-loop, which runs in \(O(n^2)\).
 % --------- Problem 4 --------- %
 
 \pagebreak
@@ -177,6 +343,37 @@ def insert_last(A, i):
 \problem{%
     Demonstrate an algorithm with an expected runtime of \(O(n)\) which solves the following problem: Given an array \texttt{A}, find the longest contiguous subarray with a sum of 0 provided such a subarray exists.
 }
+
+\answer{}
+\begin{listing}[h]
+\centering
+\begin{minted}[linenos]{python}
+def longest_subarray_sum_zero(A):
+    # HashTable data structure discussed in class
+    H = HashTable()
+    total = 0
+
+    # Runs in O(n) in total
+    for i in range(len(A)):
+        total += A[i]
+
+        # Runs in O(1)
+        j = H.find(total)
+        if j is not None:
+            return A[j+1:i]
+
+        # Equivalent to H.insert(x) where x.key = total and x.item = i
+        # Runs in O(1)
+        H[total] = i
+    return None
+\end{minted}
+\end{listing}
+
+\noindent
+\texttt{longest\_subarray\_sum\_zero(A)} works by keeping track of the running total of \texttt{A} and stores the index into the hash table \texttt{H} using the running total as the key. If the running total is seen in \texttt{H}, i.e. the program steps into the if-statement in line 10, then that means the elements between when the running total was last seen and now sums to zero.
+
+\noindent
+\texttt{longest\_subarray\_sum\_zero(A)} runs in \(O(n)\) time because the hash-table operations used runs in \(O(1)\) and are called in a singly-nested for-loop which runs in \(O(n)\).
 % --------- Problem 5 --------- %
 
 \pagebreak
@@ -185,6 +382,8 @@ def insert_last(A, i):
 \problem{%
     Is the array with values \(\langle 32, 18, 21, 15, 13, 11, 3, 13, 17, 12 \rangle\) a max-heap? Why or why not?
 }
+
+The array is not a max-heap since it breaks the max-heap property. The max-heap property states that the parent of any node must be greater than or equal to the node itself. The fourth and eighth element (with the array indexed zero) breaks the max-heap property since the fourth element is the parent of the eighth element while the fourth element is 13 while the eighth element is 17.
 % --------- Problem 6 --------- %
 
 \pagebreak
@@ -193,14 +392,47 @@ def insert_last(A, i):
 \problem{%
     Is an array that is in reverse-sorted order a max-heap? Give a counter example if it is false, and prove it if it is true.
 }
+
+Yes, an array in reverse-sorted order is a max-heap. This is because the children of a node is stored in the array after the node itself. Then, since the array is reverse-sorted order, the node must be greater than or equal to its children, otherwise the array would not be in reverse-sorted order.
 % --------- Problem 7 --------- %
 
 \pagebreak
 
 % --------- Problem 8 --------- %
 \problem{%
-    Show that the worst-case running time of \texttt{max\_heapify\_down} on a heap of size \(n\) is \(\omega(\lg n)\).
+    Show that the worst-case running time of \texttt{max\_heapify\_down} on a heap of size \(n\) is \(\Omega(\lg n)\).
 }
+
+\begin{listing}[h]
+\centering
+\begin{minted}[linenos]{python}
+def max_heapify_down(H, i):
+    if A[i] >= A[left(i)] && A[i] >= A[right(i)]:
+        return
+
+    if A[left(i)] > A[right(i)]:
+        A[left(i)], A[i] = A[i], A[left(i)]
+        max_heapify_down(A, left(i))
+
+    else:
+        A[right(i)], A[i] = A[i], A[right(i)]
+        max_heapify_down(A, right(i))
+
+def left(i): return 2 * i
+def left(i): return 2 * i + 1
+
+\end{minted}
+\end{listing}
+
+\noindent
+The worst-case running time of \texttt{max\_heapify\_down} is if it has to traverse down to the last level of the heap. Without loss of generality, let \texttt{max\_heapify\_down(H, 0)} travel to element \(n\) in the heap. Then, if we trace the path \texttt{max\_heapify\_down(H, 0)} takes backwards, we get the recurrence relation of
+\[T(n) = T(\lfloor n/2 \rfloor) + \Theta(1)\]
+We divide \(n\) by 2 since the two possible branches down the heap multiply \texttt{i} by 2, thus we divide by 2 when tracing the call stack backwards. We have  \(\Theta(1)\) in the recurrence relation since all work in each call runs in \(\Theta(1)\)-time.
+
+\noindent
+So, \(a = 1\), \(b = 2\), and \(f(n) = \Theta(1)\) (i.e. \(f(n) \in \Theta(1)\). Then \(\log_b a = \log_2 1 = 0 \Rightarrow n^{\log_b a} = n^0 = 1\). Since \(f(n) \in \Theta(1)\), then
+\[T(n) \in \Theta(\lg n)\]
+by the Master Theorem. Then by definition, \(T(n) \in \Omega(\lg n)\) as well.
 % --------- Problem 8 --------- %
 
 \pagebreak
@@ -209,6 +441,45 @@ def insert_last(A, i):
 \problem{%
     Give an \(O(n \lg k)\)-time algorithm to merge \(k\) sorted lists into one sorted list, where \(n\) is the total number of elements in all the input lists. (\emph{Hint}: Use a min-heap for k-way merging).
 }
+
+\answer{}
+\begin{listing}[h]
+\centering
+\begin{minted}[linenos]{python}
+def merge_k_lists(L):
+    '''L is a list of k sorted lists'''
+    # Dynamic Array data structures discussed in class
+    S = []
+    indices = [0 for _ in range(len(L))] # Runs in O(k)
+
+    # Min Heap (inverse of Max Heap data structure discussed in class)
+    heap = MinHeap()
+
+    for i in range(len(L)): # Runs in O(k) time
+        A = L[i]
+        indicies[i] += 1
+        # Equivalent to heap.insert(x) where x.key = A[0] and x.item = i
+        heap.insert((A[0], i)) # Runs in O(lg k)
+
+    while len(heap) > 0: # Runs in O(n) time
+        m, idx = heap.find_min() # Runs in O(lg k)
+        heap.delete_min()
+        
+        if indices[idx] + 1 < len(L[idx]):
+            indices[idx] += 1
+            n = L[idx][indices[idx]]
+            heap.insert((n, idx)) # Runs in O(lg k)
+
+        S.insert_last(m) # Runs in O(1)
+    return S
+\end{minted}
+\end{listing}
+
+\noindent
+\texttt{merge\_k\_lists} works by using a min-heap that only stores \(k\) items at most. Thus, the operations used on the min-heap only take \(O(\lg k)\). Each time that the minimum element from the min-heap is taken, a new one is added onto the heap from the corresponding array the minimum element was from. Doing this ensures that there is always an element from each sorted array in \texttt{L} in the heap so it correctly gathers the minimum element out of all the sorted arrays.
+
+\noindent
+\texttt{merge\_k\_lists} runs in \(O(n lg k)\) since each heap operation is \(O(lg k)\) which is done in each iteration of the while-loop. The while-loop is guaranteed to run in \(O(n)\) time since it essentially iterates through all elements in all the input lists, of which there are \(n\) elements in total.
 % --------- Problem 9 --------- %
 \end{document}
 
